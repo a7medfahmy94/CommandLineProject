@@ -4,6 +4,7 @@
  */
 package commandline;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -19,14 +20,30 @@ public class CommandLine {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        CommandLine cli = new CommandLine();
         String command = new String();
+        String[] commandsQueue;
         Scanner in = new Scanner(System.in);
-        command = in.nextLine();
         
-        while(command != "exit"){//exit - exits the program
-            // process the command
+        while(true){
+            command = in.nextLine(); //input a new line
+            commandsQueue = cli.parseCommand(command);//a list of commands
         }
+    }
     
+    
+    
+    /**
+     * This method will transform a string into a list of commands included
+     * in that string 
+     * for example if the command was "cd /home ; ls"
+     * it will return ["cd /home" , "ls"]
+     * @param command
+     * @return String[] containing a list of commands
+     */
+    private String[] parseCommand(String command){
+        String[] ret = command.split(";");
+        return ret;
     }
     
 }
