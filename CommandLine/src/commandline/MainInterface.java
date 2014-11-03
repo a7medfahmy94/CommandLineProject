@@ -13,14 +13,14 @@ import java.util.Scanner;
  * @author hala mohamed
  * 
  */
-public class CommandLine {
+public class MainInterface {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        CommandLine cli = new CommandLine();
+        MainInterface cli = new MainInterface();
         String command = new String();
         String[] commandsQueue;
         Scanner in = new Scanner(System.in);
@@ -28,7 +28,11 @@ public class CommandLine {
         while(true){
             command = in.nextLine(); //input a new line
             commandsQueue = cli.parseCommand(command);//a list of commands
+            for(String c: commandsQueue){
+                CommandController.process(c);
+            }
         }
+        
     }
     
     
