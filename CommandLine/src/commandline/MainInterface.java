@@ -20,6 +20,7 @@ public class MainInterface {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
         MainInterface cli = new MainInterface();
         String command = new String();
         String[] commandsQueue;
@@ -52,4 +53,5 @@ public class MainInterface {
         return ret;
     }
     
+
 }

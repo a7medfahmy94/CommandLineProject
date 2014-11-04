@@ -7,6 +7,7 @@ package commandline;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -162,17 +163,6 @@ public class CommandController {
         if(params.length != 1){
             wrongNumberOfParams(params.length,1);
             return;
-        }   
-        String root = System.getProperty("user.dir");
-        File file = new File(params[0]);
-        if(!file.delete()){
-            System.out.println(file.getName());
-            for(String s: file.list()){
-                System.setProperty("user.dir", file.getAbsolutePath());
-                rmdir(new String[]{s});
-                System.setProperty("user.dir", root);
-            }
-            file.delete();
         }
     }    
     public static void cat(String[] params){
