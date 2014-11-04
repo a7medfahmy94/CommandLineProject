@@ -8,7 +8,10 @@ package commandline;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Scanner;
 
 
@@ -81,6 +84,12 @@ public class CommandController {
             case "help":
                 help(params);
                 break;
+            case "date":
+                date(params);
+                break; 
+            case "args":
+                args(params);
+                break; 
             default:
                 System.out.println("Command not found");
                 System.out.println("Type `help` to get a list of commands");
@@ -221,10 +230,55 @@ public class CommandController {
         } 
         System.out.println(System.getProperty("user.dir"));
     }
+    public static void date(String[] params){
+        if(params.length != 0){
+            wrongNumberOfParams(params.length,0);
+            return;
+        }
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
+    }
+    public static void args(String[] params){
+        if(params.length != 0){
+            wrongNumberOfParams(params.length,0);
+            return;
+        }
+        System.out.println("cd: change directory \n" + "cd [path] \n" +
+        "path is the absolute path of a directory or a relative path to the current working directory");
+        System.out.println("Clear : "+"clear takes no parameters"
+        +"clear the screen");
+        System.out.println("copy :  cp  SOURCE... DIRECTORY \n"+"copy file from source to directory");
+        System.out.println("list : list no takes parameters \n"+"list the files in your current directory");
+        System.out.println(" mkdir :Create Directories \n"+"mkdir (directory name) \n"+"allow you to create directories");
+        System.out.println("rm :ReMove\n"+"rm filename/directories "+"remove or delete a file in your directory.");
+        System.out.println("MoVe : mv  (rename) files");
+        System.out.println("Delete directory: rmdir (directory name)");
+        System.out.println("cat:Print file content \n"+" cat (filename)");
+        System.out.println("More : more filename \n" +"more (filename) \n"+"show text in pages");
+        System.out.println("pwd :Print working directory \n "+"pwd takes no parameters");
+        System.out.println("args : List all command arguments \n  "+"args takes no parameters");
+        System.out.println("date : Current date/time \n  "+"date takes no parameters");
+    }
     public static void help(String[] params){
         if(params.length != 0){
             wrongNumberOfParams(params.length,0);
             return;
-        }        
+        }   
+        System.out.println("Copy : cp  SOURCE... DIRECTORY");
+        System.out.println("Clear : clear");
+        System.out.println("Change Directories :  cd (/directory/location)");
+        System.out.println("List : ls");
+        System.out.println("Create Directories : mkdir (directory name)");
+        System.out.println("ReMove : rm filename/directories ");
+        System.out.println("MoVe : mv  (rename) files");
+        System.out.println("Delete directory: rmdir (directory name)");
+        System.out.println("Print file content : cat filename");
+        System.out.println("More : more filename");
+        System.out.println("Less : less filename");
+        System.out.println("Print working directory : pwd");
+        System.out.println(" List all command arguments : args ");
+        System.out.println("Current date/time : date ");
+        System.out.println("Stop all : exit ");
     }
 }
