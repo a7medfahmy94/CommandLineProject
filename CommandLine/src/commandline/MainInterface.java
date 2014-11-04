@@ -26,9 +26,11 @@ public class MainInterface {
         Scanner in = new Scanner(System.in);
         
         while(true){
+            System.out.print("$ ");
             command = in.nextLine(); //input a new line
             commandsQueue = cli.parseCommand(command);//a list of commands
             for(String c: commandsQueue){
+                if(c.length() != 0)
                 CommandController.process(c);
             }
         }
