@@ -6,7 +6,10 @@
 package commandline;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -146,19 +149,37 @@ public class CommandController {
         if(params.length != 2){
             wrongNumberOfParams(params.length,2);
             return;
-        }        
+        }      
+        File s = new File(params[0]);
+        File d = new File(params[1]);
+        try{
+            copyFile(s, d);
+        }catch(Exception e){
+            System.out.println("Somthing is wrong");
+        }
     }
     public static void mv(String[] params){
         if(params.length != 2){
             wrongNumberOfParams(params.length,2);
             return;
-        }        
+        }  
+        File s = new File(params[0]);
+        File d = new File(params[1]);
+        try{
+            copyFile(s, d);
+            s.delete();
+        }catch(Exception e){
+            System.out.println("Something is wrong");
+        }
     }    
     public static void rm(String[] params){
         if(params.length != 1){
             wrongNumberOfParams(params.length,1);
             return;
         }        
+        File file = new File(params[0]);
+        if(file.delete()){}
+        else{System.err.println("file not found");}
     }    
     public static void mkdir(String[] params){
         if(params.length != 1){
@@ -280,5 +301,25 @@ public class CommandController {
         System.out.println(" List all command arguments : args ");
         System.out.println("Current date/time : date ");
         System.out.println("Stop all : exit ");
+    }
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if(!destFile.exists()) {
+         destFile.createNewFile();
+        }
+        FileChannel source = null;
+        FileChannel destination = null;
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        }
+        finally {
+            if(source != null) {
+             source.close();
+            }
+            if(destination != null) {
+             destination.close();
+            }
+        }
     }
 }
