@@ -18,16 +18,15 @@ import java.util.Date;
 import java.util.Scanner;
 
 
+
+
 /**
  *
  * @author fahmy
  */
 public class CommandController {
 
-    public static String[] COMMANDS = {
-    "clear", "cd", "ls", "cp", "mv", "rm","mkdir", "rmdir", "cat", "more",
-        "less", "pwd"
-    };
+    public static String PATH = System.getProperty("user.dir") + "/";
     
     public CommandController(){}
     
@@ -93,11 +92,16 @@ public class CommandController {
             case "args":
                 args(params);
                 break; 
+            case "exit":
+                System.exit(0);
+                break;
             default:
                 System.out.println("Command not found");
                 System.out.println("Type `help` to get a list of commands");
                 
         }
+        PATH = System.getProperty("user.dir") + "/";
+
     }
     
     private static void wrongNumberOfParams(int given,int required){
@@ -110,7 +114,7 @@ public class CommandController {
             wrongNumberOfParams(params.length,0);
             return;
         }
-        File dir = new File(System.getProperty("user.dir"));
+        File dir = new File(PATH);
         String childs[] = dir.list();
         for(String child: childs){
             System.out.println(child);
@@ -134,14 +138,17 @@ public class CommandController {
         }
         File dir;
         if(params[0].equals("..")){
-            dir = new File(System.getProperty("user.dir"));
+            dir = new File(PATH);
             System.setProperty("user.dir", dir.getParentFile().getAbsolutePath());
         }else{
-            dir = new File(params[0]);
+            if(params[0].charAt(0) != '/')
+                dir = new File(PATH + params[0]);
+            else
+                dir = new File(params[0]);
             if(dir.isDirectory()==true) {
                 System.setProperty("user.dir", dir.getAbsolutePath());
             } else {
-                System.out.println(params[0] + "is not a directory.");
+                System.out.println(params[0] + " is not a directory.");
             }
         }
     }
@@ -177,7 +184,7 @@ public class CommandController {
             wrongNumberOfParams(params.length,1);
             return;
         }        
-        File file = new File(params[0]);
+        File file = new File(PATH + params[0]);
         if(file.delete()){}
         else{System.err.println("file not found");}
     }    
@@ -186,7 +193,7 @@ public class CommandController {
             wrongNumberOfParams(params.length,1);
             return;
         }   
-        File newDir = new File(params[0]);
+        File newDir = new File(PATH+params[0]);
         newDir.mkdir();
     }    
     public static void rmdir(String[] params){
@@ -194,13 +201,19 @@ public class CommandController {
             wrongNumberOfParams(params.length,1);
             return;
         }
+        File file = new File(PATH + params[0]);
+        while(!file.delete()){
+            for(String s:file.list()){
+                rmdir(new String[]{file.getName() + "/" + s});
+            }
+        }
     }    
     public static void cat(String[] params){
         if(params.length != 1){
             wrongNumberOfParams(params.length,1);
             return;
         }        
-        String file = new IO().getInput(params[0]);
+        String file = new IO().getInput(PATH + params[0]);
         System.out.print(file);
         System.out.println();
     }
@@ -209,7 +222,7 @@ public class CommandController {
             wrongNumberOfParams(params.length,1);
             return;
         }
-        String file = new IO().getInput(params[0]);
+        String file = new IO().getInput(PATH + params[0]);
         if(file.length() != 0){
             int numLines = 0;
             for(int i = 0; i < file.length(); i++){
@@ -231,7 +244,7 @@ public class CommandController {
             wrongNumberOfParams(params.length,1);
             return;
         }        
-        String text = new IO().getInput(params[0]);
+        String text = new IO().getInput(PATH + params[0]);
         if(text.length() != 0){
             String[] lines = text.split("\n");
             Scanner in = new Scanner(System.in);
@@ -261,25 +274,55 @@ public class CommandController {
         System.out.println(dateFormat.format(date));
     }
     public static void args(String[] params){
-        if(params.length != 0){
+        if(params.length != 1){
             wrongNumberOfParams(params.length,0);
             return;
         }
-        System.out.println("cd: change directory \n" + "cd [path] \n" +
-        "path is the absolute path of a directory or a relative path to the current working directory");
-        System.out.println("Clear : "+"clear takes no parameters"
-        +"clear the screen");
-        System.out.println("copy :  cp  SOURCE... DIRECTORY \n"+"copy file from source to directory");
-        System.out.println("list : list no takes parameters \n"+"list the files in your current directory");
-        System.out.println(" mkdir :Create Directories \n"+"mkdir (directory name) \n"+"allow you to create directories");
-        System.out.println("rm :ReMove\n"+"rm filename/directories "+"remove or delete a file in your directory.");
-        System.out.println("MoVe : mv  (rename) files");
-        System.out.println("Delete directory: rmdir (directory name)");
-        System.out.println("cat:Print file content \n"+" cat (filename)");
-        System.out.println("More : more filename \n" +"more (filename) \n"+"show text in pages");
-        System.out.println("pwd :Print working directory \n "+"pwd takes no parameters");
-        System.out.println("args : List all command arguments \n  "+"args takes no parameters");
-        System.out.println("date : Current date/time \n  "+"date takes no parameters");
+        switch(params[0]){
+            case "cd":
+                System.out.println("cd: change directory \n" + "cd [path] \n" +
+                    "path is the absolute path of a directory or a relative path to the current working directory");
+                break;
+            case "clear":
+                System.out.println("Clear : "+"clear takes no parameters"
+                    +"clear the screen");
+                break;
+            case "cp":
+                System.out.println("copy :  cp  SOURCE... DIRECTORY \n"+"copy file from source to directory");
+                break;
+            case "ls":
+                System.out.println("list : list takes no parameters \n"+"list the files in your current directory");
+                break;
+            case "mkdir":
+                System.out.println(" mkdir :Create Directories \n"+"mkdir (directory name) \n"+"allow you to create directories");
+                break;
+            case "rm":
+                System.out.println("rm :ReMove\n"+"rm filename/directories "+"remove or delete a file in your directory.");
+                break;
+            case "mv":
+                System.out.println("Move : mv  (rename) files");
+                break;
+            case "rmdir":
+                System.out.println("Delete directory: rmdir (directory name)");
+                break;
+            case "cat":
+                System.out.println("cat:Print file content \n"+" cat (filename)");
+                break;
+            case "more":
+                System.out.println("More : more filename \n" +"more (filename) \n"+"show text in pages");
+                break;
+            case "pwd":
+                System.out.println("pwd :Print working directory \n "+"pwd takes no parameters");
+                break;
+            case "args":
+                System.out.println("args : List all command arguments \n  "+"args takes no parameters");
+                break;
+            case "date":
+                System.out.println("date : Current date/time \n  "+"date takes no parameters");
+                break;
+            default:
+                System.out.println("invalid command");
+        }
     }
     public static void help(String[] params){
         if(params.length != 0){
