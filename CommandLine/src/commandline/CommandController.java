@@ -137,7 +137,9 @@ public class CommandController {
             return;
         }
         File dir;
-        if(params[0].equals("..")){
+        if(params.length == 0){
+            System.setProperty("user.dir", "/home/fahmy");
+        }else if(params[0].equals("..")){
             dir = new File(PATH);
             System.setProperty("user.dir", dir.getParentFile().getAbsolutePath());
         }else{

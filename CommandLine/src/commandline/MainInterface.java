@@ -32,7 +32,7 @@ public class MainInterface {
             commandsQueue = cli.parseCommand(command);//a list of commands
             for(String c: commandsQueue){
                 if(c.length() != 0)
-                CommandController.process(c);
+                    CommandController.process(c);
             }
         }
         
